@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import os
 
 def download_submissions(cf_handle):
     response = requests.get(f"https://codeforces.com/api/user.status?handle={cf_handle}&from=1")
@@ -7,6 +8,9 @@ def download_submissions(cf_handle):
     if response.status_code != 200:
         print("Hmm . . . seems like something went wrong. Please try again later.")
         return
+
+    if not os.path.exists("saved_code"):
+        os.makedirs("saved_code")
 
     submissions = response.json()["result"]
     for s in submissions:
@@ -27,6 +31,8 @@ def get_code(contest, problem, submission_id):
 
     file_ext = "txt"
     # TODO: change file extension based on language
+
+
 
     file = open(f"saved_code/{problem}.{file_ext}", "w")
     file.write(lines.text)
